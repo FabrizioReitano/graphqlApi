@@ -1,15 +1,13 @@
-global.__srcdir = __dirname;
-global.__basedir = __dirname+'/..';
-
+require('dotenv').config()
 const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
 const persistence = require('./database/persistence');
-//const db = persistence.init();
 const resolvers = require('./resolvers');
 const TagAPI = require('./datasources/tag');
 const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    debug: true,
+    typeDefs: typeDefs,
+    resolvers: resolvers,
     engine: {
         debugPrintReports: true,
     },
@@ -19,12 +17,15 @@ const server = new ApolloServer({
             db: client
         }
     },
-    dataSources: () => ({
-        //tagAPI: new TagAPI({ db })
-        tagAPI: new TagAPI()
-    })
+    dataSources: () => {
+        return {
+            tagAPI: new TagAPI()
+        }
+    }
 });
 
-server.listen().then(({ url }) => {
+server.listen({
+    port: process.env.SERVER_PORT
+}).then(({ url }) => {
     console.log(`🚀 Server ready at ${url}`);
 });

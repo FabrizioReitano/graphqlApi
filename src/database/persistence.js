@@ -1,4 +1,3 @@
-const config = require(global.__basedir+'/config');
 const redis = require("redis");
 
 let _client;
@@ -6,7 +5,7 @@ let _client;
 async function init() {
     console.log('db init');
     return await new Promise(function(resolve, reject){
-        let client = redis.createClient(config.redis.port, config.redis.host,
+        let client = redis.createClient(process.env.REDIS_PORT, process.env.REDIS_HOST,
             {
                 retry_strategy: function(options) {
                     if (options.error && options.error.code === "ECONNREFUSED") {
@@ -41,9 +40,8 @@ async function init() {
 };
 
 async function getClient() {
-    if(_client)
-        return _client;
-    return await init();
+    if (!_client) _client = await init();
+    return _client;
 }
 
 module.exports = {

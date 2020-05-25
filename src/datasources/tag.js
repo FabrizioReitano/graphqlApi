@@ -1,27 +1,19 @@
 const { DataSource } = require('apollo-datasource');
 
 class TagAPI extends DataSource {
-    /*constructor({ db }) {
+    constructor() { // todo VERIFICA PERCHÈ VIENE CHIAMATO SPESSO
         super();
-        this.redis = db;
+        //console.log('constructor TagAPI');
     }
 
     initialize(config) {
-        this.context = config.context;
-    }*/
-    constructor() {
-        super();
-        console.log('constructor TagAPI');
-    }
-
-    initialize(config) {
-        console.log('initialize TagAPI data source');
+        //console.log('initialize TagAPI data source');
         this.context = config.context;
         this.redis = config.context.db;
     }
 
     async findTags({ prefix, offset, count }) {
-        console.log({ prefix, offset, count });
+        //console.log({ prefix, offset, count });
         return await new Promise((resolve, reject) => {
             if(prefix.length > 1) {
                 prefix = prefix.toLowerCase()
@@ -34,12 +26,19 @@ class TagAPI extends DataSource {
                 let [start, end] = ['('+prefix.substring(0, prefix.length - 1) + suffix + '{', '['+prefix + '{']
                 //console.log('start '+start+' - end '+end)
                 this.redis.zrangebylex(['tags', start, end, 'limit', offset, count], function(err, res){
+                    //console.log(err);
+                    //console.log(res);
                     if(err)
                         reject(err);
-                    else resolve({ tags: res});
+                    else {
+                        let resObj = res.map( tag => ({ name: tag }));
+                        //console.log(resObj);
+                        resolve(resObj);
+                    }
+
                 });
             } else {
-                resolve({ tags: []})
+                resolve([])
             }
         })
     }
@@ -54,3 +53,5 @@ class TagAPI extends DataSource {
         })
     }
 }
+
+module.exports = TagAPI;

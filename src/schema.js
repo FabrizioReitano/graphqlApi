@@ -6,7 +6,7 @@ const typeDefs = gql`
     }
 
     type Query {
-      tags: [Tag]!
+      tags(prefix: String!, offset: Int!, count: Int!): [Tag]!
     }
 `;
 
