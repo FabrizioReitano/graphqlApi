@@ -1,10 +1,10 @@
 const config = require(global.__basedir+'/config');
-const assert = require("assert");
 const redis = require("redis");
 
 let _client;
 
 async function init() {
+    console.log('db init');
     return await new Promise(function(resolve, reject){
         let client = redis.createClient(config.redis.port, config.redis.host,
             {
@@ -40,19 +40,12 @@ async function init() {
     });
 };
 
-function getClient() {
-    assert.ok(_client, "database non inizializzato");
-    return _client;
-}
-
-function getRepository(name) {
-    assert.ok(_client, "database non inizializzato");
-    assert.ok(_repositories.hasOwnProperty(name), "repository non trovato");
-    return _repositories[name];
+async function getClient() {
+    if(_client)
+        return _client;
+    return await init();
 }
 
 module.exports = {
-    init: init,
-    getClient: getClient,
-    getRepository: getRepository
+    getClient: getClient
 }

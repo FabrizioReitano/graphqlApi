@@ -14,7 +14,7 @@ const server = new ApolloServer({
         debugPrintReports: true,
     },
     context: async () => ({
-        db: await db.init()
+        db: persistence.getClient()
     }),
     dataSources: () => ({
         //tagAPI: new TagAPI({ db })
