@@ -1,9 +1,13 @@
 require('dotenv').config()
+console.log(process.env.DB_HOST);
 const { ApolloServer } = require('apollo-server');
 const typeDefs = require('./schema');
-const persistence = require('./database/persistence');
+//const persistence = require('./database/persistence');
+//const db = persistence.getClient();
+const db = require('./models/models');
 const resolvers = require('./resolvers');
 const TagAPI = require('./datasources/tag');
+const ServiceAPI = require('./datasources/service');
 const server = new ApolloServer({
     debug: true,
     typeDefs: typeDefs,
@@ -11,15 +15,10 @@ const server = new ApolloServer({
     engine: {
         debugPrintReports: true,
     },
-    context: async () => {
-        client = await persistence.getClient()
-        return {
-            db: client
-        }
-    },
     dataSources: () => {
         return {
-            tagAPI: new TagAPI()
+            tagAPI: new TagAPI(db.models.tag),
+            serviceAPI: new ServiceAPI(db.models.service)
         }
     }
 });
