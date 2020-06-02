@@ -2,9 +2,9 @@ const { DataSource } = require('apollo-datasource');
 const { Op } = require("sequelize");
 
 class TagAPI extends DataSource {
-    constructor(model) { // todo VERIFICA PERCHÈ VIENE CHIAMATO SPESSO
+    constructor(models) { // todo VERIFICA PERCHÈ VIENE CHIAMATO SPESSO
         super();
-        this.model = model;
+        this.models = models;
         //console.log('constructor TagAPI');
     }
 
@@ -15,7 +15,7 @@ class TagAPI extends DataSource {
 
     async findTags({ prefix, offset, count }) {
         //console.log({ prefix, offset, count });
-        let tags = await this.model.findAll({
+        let tags = await this.models.tag.findAll({
             where: {
                 name: {
                     [Op.like]: prefix+'%'

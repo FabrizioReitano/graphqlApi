@@ -25,6 +25,7 @@ const typeDefs = gql`
     type Query {
         tags(prefix: String!, offset: Int!, count: Int!): [Tag]!
         services(category: String!, center: UserPosition!, radius: Int!, offset: Int!, count: Int!): [Service]
+        service(slug: String!): Service
     }
 `;
 

@@ -19,4 +19,23 @@ db.models = {};
 db.models.tag = require('./tag')(db.connection, Sequelize);
 db.models.service = require('./service')(db.connection, Sequelize);
 
+// relazione service-tag
+const service_tag = db.connection.define('service_tag', {
+    id: {
+      type: Sequelize.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
+    created_at: Sequelize.DATE,
+    created_by: Sequelize.INTEGER,
+    service_id: Sequelize.INTEGER,
+    tag_id: Sequelize.INTEGER
+},{
+    tableName: 'services_tags',
+    underscored: true,
+    timestamps: false
+});
+db.models.service.belongsToMany(db.models.tag, {through: service_tag, foreignKey: 'service_id', as: 'tags'});
+db.models.tag.belongsToMany(db.models.service, {through: service_tag, foreignKey: 'tag_id'});
+
 module.exports = db;

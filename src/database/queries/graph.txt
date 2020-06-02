@@ -1,0 +1,29 @@
+query {
+  tags(prefix: "bar", offset: 0, count: 10) {
+    name
+  }
+}
+
+query {
+  services(category: "alimentari",
+    center: { lat: 41.868615, lon: 12.578673},
+    radius: 500, offset: 0, count: 10)
+  {
+    name,
+    slug,
+    tags {
+      name
+    }
+  }
+}
+
+query {
+  service(slug: "casilina-995")
+  {
+    name,
+    slug,
+    tags {
+      name
+    }
+  }
+}

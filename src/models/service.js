@@ -15,6 +15,7 @@ module.exports = (sequelize, type) => {
         geog: type.GEOGRAPHY('POINT', 4326)
     },{
         tableName: 'services',
-        timestamps: false
+        underscored: true,
+        paranoid: true
     })
 }

@@ -6,10 +6,10 @@ const typeDefs = require('./schema');
 //const db = persistence.getClient();
 const db = require('./models/models');
 const resolvers = require('./resolvers');
-const TagAPI = require('./datasources/tag');
-const ServiceAPI = require('./datasources/service');
+const TagAPI = require('./datasources/TagAPI');
+const ServiceAPI = require('./datasources/ServiceAPI');
 const server = new ApolloServer({
-    debug: true,
+    debug: process.env.DEBUG,
     typeDefs: typeDefs,
     resolvers: resolvers,
     engine: {
@@ -17,8 +17,8 @@ const server = new ApolloServer({
     },
     dataSources: () => {
         return {
-            tagAPI: new TagAPI(db.models.tag),
-            serviceAPI: new ServiceAPI(db.models.service)
+            tagAPI: new TagAPI(db.models),
+            serviceAPI: new ServiceAPI(db.models)
         }
     }
 });

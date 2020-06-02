@@ -13,6 +13,7 @@ module.exports = (sequelize, type) => {
         name: type.STRING(100)
     },{
         tableName: 'tags',
-        timestamps: false
+        underscored: true,
+        paranoid: true
     })
 }
