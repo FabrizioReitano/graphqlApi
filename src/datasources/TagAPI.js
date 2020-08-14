@@ -26,6 +26,16 @@ class TagAPI extends DataSource {
         });
         return tags;
     }
+
+    async findById({ id }) {
+        return await this.models.tag.findOne({
+            where: {
+                id: {
+                    [Op.eq]: id
+                }
+            }
+        });
+    }
 }
 
 module.exports = TagAPI;
