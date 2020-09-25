@@ -39,21 +39,30 @@ class ServiceAPI extends DataSource {
                     ]
                 ]
             },
-            where: Sequelize.where(
-                Sequelize.fn(
-                    'ST_DWithin',
-                    Sequelize.col('geog'),
-                    location,
-                    radius
-                ),
-                true
-            ),
+            where: {
+              [Op.and]: [
+                Sequelize.where(
+                    Sequelize.fn(
+                        'ST_DWithin',
+                        Sequelize.col('geog'),
+                        location,
+                        radius
+                    ),
+                    true
+                )
+              ]
+            },
             order: Sequelize.literal('distance ASC'),
             offset: offset,
             limit: count,
             include: [{
                 model: this.models.tag,
-                as: 'tags'
+                as: 'tags',
+                where: {
+                  name: {
+                    [Op.eq]: category
+                  }
+                }
             }]
         });
         return services;
