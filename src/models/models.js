@@ -4,6 +4,7 @@ const db = {};
 
 db.connection = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
     host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: process.env.DB_DIALECT,
     operatorsAliases: 0,
     logging: console.log,
@@ -18,6 +19,8 @@ db.connection = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.
 db.models = {};
 db.models.tag = require('./tag')(db.connection, Sequelize);
 db.models.service = require('./service')(db.connection, Sequelize);
+db.models.role = require('./role')(db.connection, Sequelize);
+db.models.user = require('./user')(db.connection, Sequelize);
 
 // relazione service-tag
 const service_tag = db.connection.define('service_tag', {
@@ -37,5 +40,17 @@ const service_tag = db.connection.define('service_tag', {
 });
 db.models.service.belongsToMany(db.models.tag, {through: service_tag, foreignKey: 'service_id', as: 'tags'});
 db.models.tag.belongsToMany(db.models.service, {through: service_tag, foreignKey: 'tag_id'});
+
+// relazione user-role
+const user_role = db.connection.define('user_role', {
+    user_id: Sequelize.INTEGER,
+    role_id: Sequelize.INTEGER
+},{
+    tableName: 'users_roles',
+    underscored: true,
+    timestamps: false
+});
+db.models.user.belongsToMany(db.models.role, {through: user_role, foreignKey: 'user_id', as: 'roles'});
+db.models.role.belongsToMany(db.models.user, {through: user_role, foreignKey: 'role_id'});
 
 module.exports = db;
