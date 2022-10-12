@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "apollo-datasource": "^0.7.0",
-    "apollo-server": "^2.13.1",
+    "apollo-server": "^2.25.4",
     "change-case": "^4.1.1",
     "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
